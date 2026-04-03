@@ -1,7 +1,6 @@
 local HttpService = game:GetService("HttpService")
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
 
--- LINK FIX (Sesuai link yang lo kasih tadi)
 local jsonUrl = "https://raw.githubusercontent.com/felixkece786-code/Finas-v2/refs/heads/main/Gunung.json"
 
 local function AmbilData()
@@ -18,46 +17,39 @@ end
 local dataGunung = AmbilData()
 
 local Window = WindUI:CreateWindow({
-    Title = "Finas Gaming V2",
+    Title = "Finas Gaming | Auto Summit Hub",
     Icon = "rbxassetid://10888673623",
     Author = "Felix"
 })
 
-local Tab = Window:Tab({ Title = "Main", Icon = "mountain" })
+local Tab = Window:Tab({ Title = "Auto Summit", Icon = "mountain" })
 
 if dataGunung then
-    local list = {}
-    for n, _ in pairs(dataGunung) do table.insert(list, n) end
-    
-    Tab:Dropdown({
-        Title = "Pilih Gunung", 
-        Options = list, 
-        Callback = function(v) _G.Pilih = v end
-    })
+    Tab:Section({ Title = "🏔️ DAFTAR GUNUNG" })
 
-    Tab:Toggle({
-        Title = "Mulai Auto Summit", 
-        Callback = function(v)
-            _G.Mulai = v
-            if v and _G.Pilih then
-                task.spawn(function()
-                    while _G.Mulai do
-                        local rute = dataGunung[_G.Pilih]
-                        for _, p in ipairs(rute) do
-                            if not _G.Mulai then break end
-                            if game.Players.LocalPlayer.Character then
-                                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(p[1], p[2], p[3])
+    -- Loop otomatis buat bikin Toggle tiap ada gunung di JSON
+    for namaGunung, rute in pairs(dataGunung) do
+        Tab:Toggle({
+            Title = "Auto Summit - " .. namaGunung,
+            Callback = function(v)
+                _G[namaGunung] = v
+                if v then
+                    task.spawn(function()
+                        while _G[namaGunung] do
+                            for _, p in ipairs(rute) do
+                                if not _G[namaGunung] then break end
+                                if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(p[1], p[2], p[3])
+                                end
+                                task.wait(0.05) -- Kecepatan jalan
                             end
-                            task.wait(0.05)
+                            task.wait(0.5)
                         end
-                        task.wait(0.5)
-                    end
-                end)
+                    end)
+                end
             end
-        end
-    })
+        })
+    end
 else
-  
-    Tab:Section({ Title = "❌ DATA GAGAL LOAD" })
-    Tab:Button({ Title = "Cek Console F9", Callback = function() print("Gagal ambil data dari: " .. jsonUrl) end })
+    Tab:Section({ Title = "❌ DATA GAGAL DIMUAT" })
 end
