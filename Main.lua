@@ -1,6 +1,7 @@
 local HttpService = game:GetService("HttpService")
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
 
+-- LINK GITHUB (Pastikan link ini bener ke file JSON lo)
 local jsonUrl = "https://raw.githubusercontent.com/felixkece786-code/Finas-v2/refs/heads/main/Gunung.json"
 
 local function AmbilData()
@@ -40,16 +41,19 @@ if dataGunung then
                                     local hrp = char.HumanoidRootPart
                                     local targetPos = Vector3.new(p[1], p[2], p[3])
                                     
-                                    -- CEK BIAR GAK GETER: Cuma TP kalau koordinatnya beda
+                                    -- ANTI-GETAR: Cek kalau koordinat BEDA baru teleport
                                     if lastPos ~= targetPos then
                                         hrp.Velocity = Vector3.new(0,0,0)
                                         hrp.CFrame = CFrame.new(p[1], p[2], p[3])
                                         lastPos = targetPos
-                                        task.wait(0.3) -- Jeda biar summit nambah & gak kilat
                                     end
+                                    
+                                    -- TETEP KASIH JEDA: Biar "Nungguin" di CP sesuai rekaman lo
+                                    -- Semakin banyak titik yang lo rekam di CP, semakin lama dia diem di situ
+                                    task.wait(0.3) 
                                 end
                             end
-                            task.wait(1)
+                            task.wait(1) -- Jeda sebelum ngulang rute dari awal
                         end
                     end)
                 end
