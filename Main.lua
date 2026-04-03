@@ -1,6 +1,7 @@
 local HttpService = game:GetService("HttpService")
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
 
+-- LINK DATA GUNUNG LO
 local jsonUrl = "https://raw.githubusercontent.com/felixkece786-code/Finas-v2/refs/heads/main/Gunung.json"
 
 local function AmbilData()
@@ -27,7 +28,7 @@ local Tab = Window:Tab({ Title = "Auto Summit", Icon = "mountain" })
 if dataGunung then
     Tab:Section({ Title = "🏔️ DAFTAR GUNUNG" })
 
-    -- Loop otomatis buat bikin Toggle tiap ada gunung di JSON
+    -- INI YANG BIKIN TAMPILANNYA JADI LIST TOGGLE KAYAK SI YANTO
     for namaGunung, rute in pairs(dataGunung) do
         Tab:Toggle({
             Title = "Auto Summit - " .. namaGunung,
@@ -41,7 +42,7 @@ if dataGunung then
                                 if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
                                     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(p[1], p[2], p[3])
                                 end
-                                task.wait(0.05) -- Kecepatan jalan
+                                task.wait(0.05)
                             end
                             task.wait(0.5)
                         end
@@ -52,4 +53,5 @@ if dataGunung then
     end
 else
     Tab:Section({ Title = "❌ DATA GAGAL DIMUAT" })
+    Tab:Button({ Title = "Klik buat cek Console F9", Callback = function() print("Gagal dari: " .. jsonUrl) end })
 end
